@@ -1,0 +1,50 @@
+﻿@inherits LayoutComponentBase
+@layout BaseLayout
+
+<div class="container-fluid">
+    <main role="main" class="pb-3">
+        @Body
+    </main>
+</div>
+
+@*<header>
+        <NavMenu />
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @Body
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - FRB Strategic Software Ltd - <a asp-area="" asp-controller="Home" asp-action="About">About</a>
+        </div>
+    </footer>*@
+@*<div class="page">
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+
+        <div class="main">
+            <div class="top-row px-4">
+                <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            </div>
+
+            <div class="content px-4">
+                @Body
+            </div>
+        </div>
+    </div>*@
+
+@*@code
+    {
+        // Use this to determine which razor page is being loaded
+        public Type PageType { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            PageType = (this.Body.Target as RouteView)?.RouteData.PageType;
+            var RouteValues = (this.Body.Target as RouteView)?.RouteData.RouteValues;
+            Console.WriteLine("This is your type (current type)" + PageType);
+        }
+    }*@

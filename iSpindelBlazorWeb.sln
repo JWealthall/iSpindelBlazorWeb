@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpindelBlazorWeb.Server", "Server\iSpindelBlazorWeb.Server.csproj", "{426082EC-2B00-49A0-90D2-BA653F6309FB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpindelBlazorWeb.Client", "Client\iSpindelBlazorWeb.Client.csproj", "{6065C4C8-C220-4A66-8E88-C4FDA04396F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iSpindelBlazorWeb.Shared", "Shared\iSpindelBlazorWeb.Shared.csproj", "{987F1612-A8E5-4A99-8052-12C733D67082}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D56A320-F928-465D-95B7-B230BD94CEFA}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{42735A89-96F2-46E5-AA0A-20E6F16AD5DB}"
+	ProjectSection(SolutionItems) = preProject
+		images\ExampleBatchChart.png = images\ExampleBatchChart.png
+		images\ExampleBatchDetail.png = images\ExampleBatchDetail.png
+		images\ExampleBatchSummary.png = images\ExampleBatchSummary.png
+		images\ExampleDeviceSummary.png = images\ExampleDeviceSummary.png
+		images\ExampleHomePage.png = images\ExampleHomePage.png
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{426082EC-2B00-49A0-90D2-BA653F6309FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{426082EC-2B00-49A0-90D2-BA653F6309FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{426082EC-2B00-49A0-90D2-BA653F6309FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{426082EC-2B00-49A0-90D2-BA653F6309FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6065C4C8-C220-4A66-8E88-C4FDA04396F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6065C4C8-C220-4A66-8E88-C4FDA04396F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6065C4C8-C220-4A66-8E88-C4FDA04396F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6065C4C8-C220-4A66-8E88-C4FDA04396F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{987F1612-A8E5-4A99-8052-12C733D67082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{987F1612-A8E5-4A99-8052-12C733D67082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{987F1612-A8E5-4A99-8052-12C733D67082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{987F1612-A8E5-4A99-8052-12C733D67082}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{42735A89-96F2-46E5-AA0A-20E6F16AD5DB} = {7D56A320-F928-465D-95B7-B230BD94CEFA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CFDC453-11D3-4C82-AD11-BEFF0270901B}
+	EndGlobalSection
+EndGlobal

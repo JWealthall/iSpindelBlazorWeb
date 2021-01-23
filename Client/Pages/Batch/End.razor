@@ -1,0 +1,104 @@
+﻿@page "/batch/end/{Id:guid}"
+@* This can be used to add a "History" pages - and allow a "go back" without resorting to JavaScript Injection
+    All pages will need this for it to operate correctly *@
+@inherits PageComponentBase
+@inject NavigationManager NavigationManager
+@inject IDataHttpRepository Data
+
+<h2>End Batch</h2>
+<h3 class="text-danger">Are you sure you want to end this?  No other logs can be added</h3>
+<hr />
+@if (_batch != null)
+{
+    <EditForm Model="@_batch" OnSubmit="@HandleSubmit">
+        <div class="form-row">
+            <div class="w-100"></div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Device Id</label>
+                <InputGuid @bind-Value="@_batch.DeviceId" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Batch Id</label>
+                <InputGuid @bind-Value="@_batch.BatchId" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Start Date</label>
+                <InputDate @bind-Value="@_batch.StartDate" class="form-control" readonly="readonly" />
+            </div>
+            <div class="w-100"></div>
+            <div class="form-group col-md-12 col-lg-8 col-xl-6">
+                <label class="col-form-label">Description </label>
+                <InputText @bind-Value="@_batch.Description" class="form-control" readonly="readonly" />
+                <ValidationMessage For="() => _batch.Description" />
+            </div>
+            @if (!_batch.EndDate.HasValue)
+            {
+                <div class="w-100"></div>
+                <div class="form-group col">
+                    <button type="submit" class="btn btn-primary">End Batch</button>
+                </div>
+            }
+        </div>
+    </EditForm>
+}
+@if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="form-row">
+        <label class="col-12 col-form-label col-form-label-error">@_errorMessage</label>
+    </div>
+}
+
+<div>
+    @if (PageState.CanGoBack()) // This is an example of a dynamic "Previous Page".  But it doesn't survive a page refresh
+    {
+        <a href="@PageState.GetGoBackPage()">Back to edit</a>
+    }
+    else
+    {
+        <a href="/batch/edit/@Id">Back to edit</a>
+    }
+</div>
+
+@code {
+    private Batch _batch = null;
+    private string _errorMessage = null;
+
+    [Parameter]
+    public Guid? Id { get; set; } = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task HandleSubmit()
+    {
+        var endedBatch = await Data.EndBatch(_batch);
+        if (endedBatch == null)
+        {
+            _errorMessage = "Failed to end batch";
+            return;
+        }
+        if (!string.IsNullOrWhiteSpace(endedBatch.StatusData.Message))
+        {
+            _errorMessage = $"Failed to end batch - {endedBatch.StatusData.Message}";
+            return;
+        }
+        NavigationManager.NavigateTo($"batch/edit/{_batch.BatchId}");
+    }
+
+    private async Task LoadData()
+    {
+        //_data = null;  // This will make the "Loading" appear between changes
+        if (Id != null)
+        {
+            _batch = await Data.GetBatch(Id.Value);
+            if (_batch.EndDate.HasValue) _errorMessage = "Batch already has end date";
+        }
+        else
+        {
+            _errorMessage = "Batch not found";
+        }
+    }
+
+}
