@@ -1,0 +1,116 @@
+﻿@page "/log/delete/{Id:guid}"
+
+@inject NavigationManager NavigationManager
+@inject IDataHttpRepository Data
+
+<h2>Delete Log</h2>
+<h3 class="text-danger">Are you sure you want to delete this?  Cannot be undone</h3>
+<hr />
+@if (_log != null)
+{
+    <EditForm Model="@_log" OnSubmit="@HandleSubmit">
+        <div class="form-row">
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Log Id</label>
+                <InputGuid @bind-Value="@_log.LogId" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Date</label>
+                <InputDateTime @bind-Value="@_log.Date" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Angle</label>
+                <InputNumber @bind-Value="@_log.Angle" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Temperature</label>
+                <InputNumber @bind-Value="@_log.Temperature" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Temp Units</label>
+                <InputText @bind-Value="@_log.TempUnits" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Battery</label>
+                <InputNumber @bind-Value="@_log.Battery" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Gravity</label>
+                <InputNumber @bind-Value="@_log.Gravity" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Interval</label>
+                <InputNumber @bind-Value="@_log.Interval" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">RSSI</label>
+                <InputNumber @bind-Value="@_log.RSSI" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">Batch Id</label>
+                <InputGuid @bind-Value="@_log.DeviceId" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group col-md-6 col-lg-4">
+                <label class="col-form-label">LogId</label>
+                <InputGuid @bind-Value="@_log.BatchId" class="form-control" readonly="readonly" />
+            </div>
+            <div class="w-100"></div>
+            <div class="form-group col">
+                <button type="submit" class="btn btn-primary">Delete Log</button>
+            </div>
+        </div>
+    </EditForm>
+}
+@if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="form-row">
+        <label class="col-12 col-form-label col-form-label-error">@_errorMessage</label>
+    </div>
+}
+
+<div>
+    <a href="/batch">Back to list</a>
+</div>
+
+@code {
+    private Log _log = null;
+    private string _errorMessage = null;
+
+    [Parameter]
+    public Guid? Id { get; set; } = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task HandleSubmit()
+    {
+        var endedBatch = await Data.DeleteLog(_log);
+        if (endedBatch == null)
+        {
+            _errorMessage = "Failed to delete log";
+            return;
+        }
+        if (!string.IsNullOrWhiteSpace(endedBatch.StatusData.Message))
+        {
+            _errorMessage = $"Failed to delete log - {endedBatch.StatusData.Message}";
+            return;
+        }
+        NavigationManager.NavigateTo("batch");
+    }
+
+    private async Task LoadData()
+    {
+        //_data = null;  // This will make the "Loading" appear between changes
+        if (Id != null)
+        {
+            _log = await Data.GetLog(Id.Value);
+            if (_log == null) _errorMessage = "Log not found";
+        }
+        else
+        {
+            _errorMessage = "Log Id Required";
+        }
+    }
+}

@@ -6,6 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using iSpindelBlazorWeb.Server.Data;
+using iSpindelBlazorWeb.Shared;
+using MessagePack;
+using MessagePack.AspNetCoreMvcFormatter;
+using MessagePack.Resolvers;
 using Microsoft.EntityFrameworkCore;
 
 namespace iSpindelBlazorWeb.Server
@@ -36,7 +40,20 @@ namespace iSpindelBlazorWeb.Server
             else
                 services.AddDbContext<LogDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("iSpindelSqlServer")));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddMvcOptions(option =>
+                {
+                    // Run with the default recommended resolver
+                    //option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options));
+                    //option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options));
+
+                    // Can be run with compression - will make a smaller sizer, but is slower to run
+                    //option.OutputFormatters.Add(new MessagePackOutputFormatter(ContractlessStandardResolver.Options.WithCompression(MessagePackCompression.Lz4BlockArray)));
+                    //option.InputFormatters.Add(new MessagePackInputFormatter(ContractlessStandardResolver.Options.WithCompression(MessagePackCompression.Lz4BlockArray)));
+
+                    // Use a custom resolver
+                    option.OutputFormatters.Add(new MessagePackOutputFormatter(MsgPack.CustomFormatter));
+                    option.InputFormatters.Add(new MessagePackInputFormatter(MsgPack.CustomFormatter));
+                });
             services.AddRazorPages();
             services.AddTransient<LogDbService>();
         }

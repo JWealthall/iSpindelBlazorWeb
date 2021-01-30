@@ -4,19 +4,28 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MessagePack;
 
 namespace iSpindelBlazorWeb.Shared.Models
 {
+    [MessagePackObject]
     public class SummaryDataModel
     {
+        [MessagePack.Key(0)]
         public Guid? DeviceId { get; set; }
+        [MessagePack.Key(1)]
         public Guid? BatchId { get; set; }
+        [MessagePack.Key(2)]
         public List<DeviceSummaryModel> Devices { get; set; }
+        [MessagePack.Key(3)]
         public List<BatchSummaryModel> Batches { get; set; }
+        [MessagePack.Key(4)]
         public DateTime LastUpdated { get; set; }
 
+        [MessagePack.Key(5)]
         public Batch Batch { get; set; }
 
+        [IgnoreMember]
         public string DeviceName
         {
             get
@@ -27,6 +36,7 @@ namespace iSpindelBlazorWeb.Shared.Models
             }
         }
 
+        [IgnoreMember]
         public string BatchName
         {
             get
@@ -38,6 +48,7 @@ namespace iSpindelBlazorWeb.Shared.Models
         }
     }
 
+    [MessagePackObject]
     public class BatchSummaryModel
     {
         public BatchSummaryModel() { }
@@ -69,46 +80,63 @@ namespace iSpindelBlazorWeb.Shared.Models
             if (ln != null) MinTemperature = ll;
             if (la != null) AvgTemperature = la;
         }
+        [MessagePack.Key(0)]
         public Guid BatchId { get; set; }
+        [MessagePack.Key(1)]
         public string Description { get; set; }
+        [MessagePack.Key(2)]
         public string TempUnits { get; set; }
 
+        [MessagePack.Key(3)]
         [Display(Name = "Start")]
         public DateTime StartDate { get; set; }
 
+        [MessagePack.Key(4)]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public decimal? StartGravity { get; set; }
         
+        [MessagePack.Key(5)]
         [DisplayFormat(DataFormatString = "{0:0.0}")]
         public decimal? StartTemperature { get; set; }
         
+        [MessagePack.Key(6)]
         [Display(Name = "End")]
         public DateTime? EndDate { get; set; }
         
+        [MessagePack.Key(7)]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public decimal? EndGravity { get; set; }
         
+        [MessagePack.Key(8)]
         [DisplayFormat(DataFormatString = "{0:0.0}")]
         public decimal? EndTemperature { get; set; }
         
+        [MessagePack.Key(9)]
         public DateTime? FirstLogDate { get; set; }
         
+        [MessagePack.Key(10)]
         public DateTime? LastLogDate { get; set; }
+        [MessagePack.Key(11)]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public decimal? MaxGravity { get; set; }
         
+        [MessagePack.Key(12)]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public decimal? MinGravity { get; set; }
         
+        [MessagePack.Key(13)]
         [DisplayFormat(DataFormatString = "{0:0.0}")]
         public decimal? MaxTemperature { get; set; }
         
+        [MessagePack.Key(14)]
         [DisplayFormat(DataFormatString = "{0:0.0}")]
         public decimal? MinTemperature { get; set; }
         
+        [MessagePack.Key(15)]
         [DisplayFormat(DataFormatString = "{0:0.0}")]
         public decimal? AvgTemperature { get; set; }
 
+        [IgnoreMember]
         [DisplayFormat(DataFormatString = "{0:0.00}%")]
         public decimal? Abv
         {
@@ -119,6 +147,7 @@ namespace iSpindelBlazorWeb.Shared.Models
             }
         }
 
+        [IgnoreMember]
         [DisplayFormat(DataFormatString = "{0:0.00}%")]
         [Display(Name = "Abv H/L")]
         public decimal? AbvMaxMin
@@ -130,6 +159,7 @@ namespace iSpindelBlazorWeb.Shared.Models
             }
         }
 
+        [IgnoreMember]
         [DisplayFormat(DataFormatString = "{0:0.000} days")]
         public decimal? Duration
         {
@@ -140,9 +170,11 @@ namespace iSpindelBlazorWeb.Shared.Models
                 return (decimal)t.Value.Ticks / (decimal)TimeSpan.TicksPerDay;
             }
         }
+        [MessagePack.Key(16)]
         public bool IsDetail { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class DeviceSummaryModel
     {
         public DeviceSummaryModel() { }
@@ -165,29 +197,44 @@ namespace iSpindelBlazorWeb.Shared.Models
             RSSI = l.RSSI;
         }
 
+        [MessagePack.Key(0)]
         public Guid DeviceId { get; set; }
+        [MessagePack.Key(1)]
         public string Name { get; set; }    // This is what's used to match up the iSpindel to this DB
+        [MessagePack.Key(2)]
         public string Token { get; set; }    // This could be used for authorisation
+        [MessagePack.Key(3)]
         [Display(Name = "Spindel Id")]
         public int? SpindelId { get; set; }
+        [MessagePack.Key(4)]
         public string Description { get; set; }
 
+        [MessagePack.Key(5)]
         [Display(Name = "Last Log")]
         public DateTime? Date { get; set; }
+        [MessagePack.Key(6)]
         public decimal? Angle { get; set; }
+        [MessagePack.Key(7)]
         [DisplayFormat(DataFormatString = "{0:0.0}")]
         [Display(Name = "Temp")]
         public decimal? Temperature { get; set; }
+        [MessagePack.Key(8)]
         public string TempUnits { get; set; }
+        [MessagePack.Key(9)]
         public decimal? Battery { get; set; }
+        [MessagePack.Key(10)]
         [DisplayFormat(DataFormatString = "{0:0.000}")]
         public decimal? Gravity { get; set; }
+        [MessagePack.Key(11)]
         public int? Interval { get; set; }
+        [MessagePack.Key(12)]
         public int? RSSI { get; set; }
 
+        [MessagePack.Key(13)]
         public bool IsDetail { get; set; } = false;
     }
 
+    [MessagePackObject]
     public class LogSummaryModel
     {
         public LogSummaryModel() { }
@@ -200,10 +247,15 @@ namespace iSpindelBlazorWeb.Shared.Models
             TempUnits = tempUnits;
         }
 
+        [MessagePack.Key(0)]
         public Guid? BatchId { get; set; }
+        [MessagePack.Key(1)]
         public DateTime? Date { get; set; }
+        [MessagePack.Key(2)]
         public decimal? Gravity { get; set; }
+        [MessagePack.Key(3)]
         public decimal? Temperature { get; set; }
+        [MessagePack.Key(4)]
         public string TempUnits { get; set; }
     }
 }

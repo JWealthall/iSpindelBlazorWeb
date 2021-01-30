@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading.Tasks;
+using iSpindelBlazorWeb.Shared;
 using iSpindelBlazorWeb.Shared.Models;
 
 namespace iSpindelBlazorWeb.Client.HttpRepository
@@ -52,8 +51,8 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
 
         public async Task<Batch> CreateBatch(Batch batch)
         {
-            var res = await _client.PostAsJsonAsync<Batch>("Data/BatchCreate", batch);
-            var devRes = res.Content.ReadFromJsonAsync<Batch>().Result;
+            var res = await _client.PostAsMessagePackAsync<Batch>("Data/BatchCreate", batch);
+            var devRes = res.Content.ReadFromMessagePackAsync<Batch>().Result;
             if (devRes != null && string.IsNullOrWhiteSpace(devRes.StatusData.Message) && devRes.BatchId == _lastBatchId)
             {
                 _lastBatchSummary = null;
@@ -65,8 +64,8 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
 
         public async Task<Log> DeleteLog(Log log)
         {
-            var res = await _client.PostAsJsonAsync<Log>($"Data/LogDelete/{log.LogId}", log);
-            var devRes = res.Content.ReadFromJsonAsync<Log>().Result;
+            var res = await _client.PostAsMessagePackAsync<Log>($"Data/LogDelete/{log.LogId}", log);
+            var devRes = res.Content.ReadFromMessagePackAsync<Log>().Result;
             if (devRes != null && string.IsNullOrWhiteSpace(devRes.StatusData.Message) && devRes.BatchId == _lastBatchId)
             {
                 _lastBatchSummary = null;
@@ -78,8 +77,8 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
 
         public async Task<Batch> EndBatch(Batch batch)
         {
-            var res = await _client.PostAsJsonAsync<Batch>($"Data/BatchEnd/{batch.BatchId}", batch);
-            var devRes = res.Content.ReadFromJsonAsync<Batch>().Result;
+            var res = await _client.PostAsMessagePackAsync<Batch>($"Data/BatchEnd/{batch.BatchId}", batch);
+            var devRes = res.Content.ReadFromMessagePackAsync<Batch>().Result;
             if (devRes != null && string.IsNullOrWhiteSpace(devRes.StatusData.Message) && devRes.BatchId == _lastBatchId)
             {
                 _lastBatchSummary = null;
@@ -91,12 +90,12 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
 
         private async Task<DateTime> GetLastUpdated()
         {
-            return await _client.GetFromJsonAsync<DateTime>("Data/LastUpdated");
+            return await _client.GetFromMessagePackAsync<DateTime>("Data/LastUpdated");
         }
 
         public async Task<Batch> GetBatch(Guid id)
         {
-            return await _client.GetFromJsonAsync<Batch>($"Data/Batch/{id}");
+            return await _client.GetFromMessagePackAsync<Batch>($"Data/Batch/{id}");
         }
 
         public async Task<SummaryDataModel> GetBatchesSummary()
@@ -106,7 +105,7 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
                 var newLastUpdated = await GetLastUpdated();
                 if (newLastUpdated <= _lastUpdated) return _lastBatchesSummary;
             }
-            _lastBatchesSummary = await _client.GetFromJsonAsync<SummaryDataModel>("Data/BatchesSummary");
+            _lastBatchesSummary = await _client.GetFromMessagePackAsync<SummaryDataModel>("Data/BatchesSummary");
             if (_lastBatchesSummary != null) _lastUpdated = _lastBatchesSummary.LastUpdated;
             return _lastBatchesSummary;
         }
@@ -118,7 +117,12 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
                 var newLastUpdated = await GetLastUpdated();
                 if (newLastUpdated <= _lastUpdated) return _lastBatchSummary;
             }
-            _lastBatchSummary = await _client.GetFromJsonAsync<SummaryDataModel>($"Data/BatchSummary/{id}");
+            var start = DateTime.Now;
+            Console.WriteLine("Start:" + DateTime.Now);
+            _lastBatchSummary = await _client.GetFromMessagePackAsync<SummaryDataModel>($"Data/BatchSummary/{id}");
+            Console.WriteLine("End:" + DateTime.Now);
+            var timeTaken = DateTime.Now - start;
+            Console.WriteLine(timeTaken);
             if (_lastBatchSummary != null) _lastUpdated = _lastBatchSummary.LastUpdated;
             _lastBatchId = id;
             return _lastBatchSummary;
@@ -129,7 +133,7 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
             // TODO: Detect if an "empty" device was returned
             try
             {
-                return await _client.GetFromJsonAsync<Device>($"Data/Device/{id}");
+                return await _client.GetFromMessagePackAsync<Device>($"Data/Device/{id}");
             }
             catch (HttpRequestException e)
             {
@@ -150,7 +154,7 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
                 var newLastUpdated = await GetLastUpdated();
                 if (newLastUpdated <= _lastUpdated) return _lastDevicesSummary;
             }
-            _lastDevicesSummary = await _client.GetFromJsonAsync<SummaryDataModel>("Data/DevicesSummary");
+            _lastDevicesSummary = await _client.GetFromMessagePackAsync<SummaryDataModel>("Data/DevicesSummary");
             if (_lastDevicesSummary != null) _lastUpdated = _lastDevicesSummary.LastUpdated;
             return _lastDevicesSummary;
         }
@@ -162,7 +166,7 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
                 var newLastUpdated = await GetLastUpdated();
                 if (newLastUpdated <= _lastUpdated) return _lastDeviceSummary;
             }
-            _lastDeviceSummary = await _client.GetFromJsonAsync<SummaryDataModel>($"Data/DeviceSummary/{id}");
+            _lastDeviceSummary = await _client.GetFromMessagePackAsync<SummaryDataModel>($"Data/DeviceSummary/{id}");
             if (_lastDeviceSummary != null) _lastUpdated = _lastDeviceSummary.LastUpdated;
             _lastDeviceId = id;
             return _lastDeviceSummary;
@@ -170,7 +174,7 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
 
         public async Task<Log> GetLog(Guid id)
         {
-            return await _client.GetFromJsonAsync<Log>($"Data/Log/{id}");
+            return await _client.GetFromMessagePackAsync<Log>($"Data/Log/{id}");
         }
 
         public async Task<SummaryDataModel> GetSummary()
@@ -180,15 +184,15 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
                 var newLastUpdated = await GetLastUpdated();
                 if (newLastUpdated <= _lastUpdated) return _lastSummary;
             }
-            _lastSummary = await _client.GetFromJsonAsync<SummaryDataModel>("Data/Summary");
+            _lastSummary = await _client.GetFromMessagePackAsync<SummaryDataModel>("Data/Summary");
             if (_lastSummary != null) _lastUpdated = _lastSummary.LastUpdated;
             return _lastSummary;
         }
 
         public async Task<Batch> UpdateBatch(Batch batch)
         {
-            var res = await _client.PostAsJsonAsync<Batch>($"Data/BatchUpdate/{batch.BatchId}", batch);
-            var devRes = res.Content.ReadFromJsonAsync<Batch>().Result;
+            var res = await _client.PutAsMessagePackAsync<Batch>($"Data/BatchUpdate/{batch.BatchId}", batch);
+            var devRes = await res.Content.ReadFromMessagePackAsync<Batch>();
             if (devRes != null && string.IsNullOrWhiteSpace(devRes.StatusData.Message) && devRes.BatchId == _lastBatchId)
             {
                 _lastBatchSummary = null;
@@ -200,8 +204,7 @@ namespace iSpindelBlazorWeb.Client.HttpRepository
 
         public async Task<Device> UpdateDevice(Device device)
         {
-            var res = await _client.PostAsJsonAsync<Device>($"Data/DeviceUpdate/{device.DeviceId}", device);
-            var devRes = res.Content.ReadFromJsonAsync<Device>().Result;
+            var devRes = await _client.PostReadAsMessagePackAsync<Device>($"Data/DeviceUpdate/{device.DeviceId}", device);
             if (devRes != null && string.IsNullOrWhiteSpace(devRes.StatusData.Message) && devRes.DeviceId == _lastDeviceId) _lastDeviceSummary = null;
             return devRes;
         }

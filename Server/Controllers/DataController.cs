@@ -66,7 +66,7 @@ namespace iSpindelBlazorWeb.Server.Controllers
             return await _logDb.Context.Batches.ToListAsync();
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("BatchUpdate/{batchId:Guid}")]
         public async Task<Batch> BatchUpdate(Guid batchId, [FromBody] Batch batch)
         {

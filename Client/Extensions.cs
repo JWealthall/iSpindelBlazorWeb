@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
+using iSpindelBlazorWeb.Shared;
+using MessagePack;
+using MessagePack.Resolvers;
 
 namespace iSpindelBlazorWeb.Client
 {
@@ -18,5 +24,18 @@ namespace iSpindelBlazorWeb.Client
         public static DateTime TrimToMinute(this DateTime date, int minutes) { return date.Trim(TimeSpan.TicksPerMinute * minutes); }
         public static DateTime TrimToHour(this DateTime date) { return date.Trim(TimeSpan.TicksPerHour); }
         public static DateTime TrimToHour(this DateTime date, int minutes) { return date.Trim(TimeSpan.TicksPerHour * minutes); }
+
+       
+        
+        /*
+         * vаr dаtа = "Hellо Wоrld";
+using (vаr httpClient = new HttpClient())
+{
+httpClient.BаseAddress = new Uri("https://lоcаlhоst:44362/");
+vаr buffer = MessаgePаckSeriаlizer.Seriаlize(dаtа);
+vаr byteCоntent = new ByteArrаyCоntent(buffer);
+vаr result = httpClient.PоstAsync("аpi/vаlues", byteCоntent).Result;
+
+         */
     }
 }

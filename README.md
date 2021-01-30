@@ -5,7 +5,7 @@ This is a basic service for recording information from an *iSpindel* written usi
 It takes input from iSpindel set to use HTTP.
 
 This was written primarily as an exercise in learning some new languages and frameworks.
-I've always found having a practicle application to write helps with the learning.
+I have always found having a practicle application to write helps with the learning.
 There were certainly some challenges with complex entity framework joins and with adding a chart.
 This is a follow on from basic asp.net MVC, Angular and React front ends to show similarities/differences in the frameworks.
 
@@ -26,6 +26,13 @@ but as I expect this to be run on a private network I've not felt it necessary t
 For each device you can create a *Batch* which will have a start date of when you created it.
 Description can be changed for a batch and a batch can be manually ended.
 A batch will automatically be ended if a new batch is created on the same device.
+
+I have added a couple of custom Input components. One for a guid and the second so that I can display a date & time.
+
+I have used *MessagePack* to improve the performance of data transfer (and remove potential issues with dates/decimals).
+Getting the log data is more than twice as quick as using JSON.
+You do not have to *annotate* the code with MessagePack, but doing so will improve the performance.
+The serialization options I have used will cater for both.
 
  ![Batch Detail Image](images/ExampleBatchDetail.png)
  
