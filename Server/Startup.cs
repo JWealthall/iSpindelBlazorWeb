@@ -11,6 +11,7 @@ using MessagePack;
 using MessagePack.AspNetCoreMvcFormatter;
 using MessagePack.Resolvers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace iSpindelBlazorWeb.Server
 {
@@ -54,12 +55,14 @@ namespace iSpindelBlazorWeb.Server
                     option.OutputFormatters.Add(new MessagePackOutputFormatter(MsgPack.CustomFormatter));
                     option.InputFormatters.Add(new MessagePackInputFormatter(MsgPack.CustomFormatter));
                 });
+            services.AddRazorComponents()
+                .AddInteractiveWebAssemblyComponents();
             services.AddRazorPages();
             services.AddTransient<LogDbService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -71,17 +74,19 @@ namespace iSpindelBlazorWeb.Server
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseBlazorFrameworkFiles();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-                endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
-            });
+            app.UseAntiforgery();
+
+            app.MapRazorPages();
+            app.MapControllers();
+
+            app.MapRazorComponents<App>()
+                .AddInteractiveWebAssemblyRenderMode()
+                .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
         }
     }
 }
